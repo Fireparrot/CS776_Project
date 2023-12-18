@@ -55,7 +55,7 @@ function func_v_cliff(xs) {
 }
 function func_bimodal_equal(xs) {
     var x = xs[0];
-    return x <= 0.5 ? -Math.exp((x-0.25)**2/-0.01) : -Math.exp((x-0.75)**2/-0.01);
+    return x <= 0.5 ? -Math.exp((x-0.25)**2/-0.01) : -0.5*Math.exp((x-0.75)**2/-0.01);
 }
 function func_bimodal_unequal(xs) {
     var x = xs[0];
