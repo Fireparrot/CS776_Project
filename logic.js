@@ -513,6 +513,8 @@ function should_stop() {
     return 0;
 }
 function do_all_gens(remaining_runs = 1) {
+    if(typeof remaining_runs != 'number') remaining_runs = 1;
+    //console.log("called " + remaining_runs);
     if(remaining_runs < 1) return;
     if(current_generation == null)
         generate_init_generation();
@@ -526,6 +528,7 @@ function do_all_gens(remaining_runs = 1) {
         document.getElementById('runs_stats2').innerHTML = "premature convergence: " + runs_stats[2];
         document.getElementById('runs_stats3').innerHTML = "exceeded # gens: " + runs_stats[3];
         current_generation = null;
+        //console.log("calling " + (remaining_runs-1));
         setTimeout(do_all_gens.bind(null, remaining_runs-1), 5);
     }
 }
