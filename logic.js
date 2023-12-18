@@ -39,11 +39,14 @@ var amount_runs = 20;
 var current_generation;
 var func_graph = {};
 var generation_graph = {};
-var history_fitness = [];
 var history_fitness_graph = {};
 var history_value_graph = {};
-var runs_stats = [0, 0, 0, 0];
 
+var runs_stats = [0, 0, 0, 0];
+var averages_fitness = Array.from({length: max_gens}, (e, i) => [0, 0]);
+var averages_value = Array.from({length: max_gens}, (e, i) => [0, 0]);
+var averages_fitness_graph = {};
+var averages_value_graph = {};
 
 function func_v(xs) {
     var x = xs[0];
@@ -372,6 +375,53 @@ function generate_generation_graph() {
     generation_graph.chart.draw(generation_graph.data, generation_graph.options);
 }
 
+function generate_averages_graphs() {
+    var num_runs = runs_stats[0] + runs_stats[1] + runs_stats[2] + runs_stats[3];
+    if(num_runs < 1) return;
+
+    averages_fitness_graph.data = new google.visualization.DataTable();
+    averages_fitness_graph.data.addColumn('number', 'T');
+	averages_fitness_graph.data.addColumn('number', 'ave');
+    averages_fitness_graph.data.addColumn('number', 'max');
+	averages_fitness_graph.options = {
+		hAxis: {
+			title: 'generation #',
+			format: '0',
+            minValue: 0,
+            maxValue: 1
+		},
+		vAxis: {
+			title: 'average fitness'
+		}
+	};
+    averages_fitness_graph.chart = new google.visualization.LineChart(document.getElementById('fitness_ave_graph'));
+
+    averages_value_graph.data = new google.visualization.DataTable();
+    averages_value_graph.data.addColumn('number', 'T');
+	averages_value_graph.data.addColumn('number', 'ave');
+    averages_value_graph.data.addColumn('number', 'min');
+	averages_value_graph.options = {
+		hAxis: {
+			title: 'generation #',
+			format: '0',
+            minValue: 0,
+            maxValue: 1
+		},
+		vAxis: {
+			title: 'average value'
+		}
+	};
+    averages_value_graph.chart = new google.visualization.LineChart(document.getElementById('value_ave_graph'));
+
+    for(var i = 0; i < averages_fitness.length; ++i) {
+        averages_fitness_graph.data.addRow([i].concat(vec_div(averages_fitness[i], num_runs)));
+        averages_value_graph.data.addRow([i].concat(vec_div(averages_value[i], num_runs)));
+    }
+
+    averages_fitness_graph.chart.draw(averages_fitness_graph.data, averages_fitness_graph.options);
+    averages_value_graph.chart.draw(averages_value_graph.data, averages_value_graph.options);
+}
+
 function generate_fitness_value_graph() {
     history_fitness_graph.chart.draw(history_fitness_graph.data, history_fitness_graph.options);
     history_value_graph.chart.draw(history_value_graph.data, history_value_graph.options);
@@ -443,6 +493,8 @@ class Generation {
 
         history_fitness_graph.data.addRow([this.count, fitness_ave, fitness_max]);
         history_value_graph.data.addRow([this.count, value_ave, value_min]);
+        averages_fitness[this.count] = vec_add(averages_fitness[this.count], [fitness_ave, fitness_max]);
+        averages_value[this.count] = vec_add(averages_value[this.count], [value_ave, value_min]);
         ++this.count;
 
         generate_generation_graph();
@@ -528,11 +580,16 @@ function do_all_gens(remaining_runs = 1) {
         do_next_gen();
         setTimeout(do_all_gens.bind(null, remaining_runs), 5);
     } else {
+        for(var i = current_generation.count; i < max_gens; ++i) {
+            averages_fitness[i] = vec_add(averages_fitness[i], current_generation.fitness_stats);
+            averages_value[i] = vec_add(averages_value[i], current_generation.value_stats);
+        }
         ++runs_stats[should_stop()-1];
         document.getElementById('runs_stats0').innerHTML = "x convergence: " + runs_stats[0];
-        document.getElementById('runs_stats1').innerHTML = "y convergence: " + runs_stats[1];
+        document.getElementById('runs_stats1').innerHTML = "";//"y convergence: " + runs_stats[1];
         document.getElementById('runs_stats2').innerHTML = "premature convergence: " + runs_stats[2];
         document.getElementById('runs_stats3').innerHTML = "exceeded # gens: " + runs_stats[3];
+        generate_averages_graphs();
         current_generation = null;
         //console.log("calling " + (remaining_runs-1));
         setTimeout(do_all_gens.bind(null, remaining_runs-1), 5);
@@ -545,7 +602,9 @@ function do_many_runs() {
 function clear_stats() {
     runs_stats = [0,0,0,0];
     document.getElementById('runs_stats0').innerHTML = "x convergence: " + runs_stats[0];
-    document.getElementById('runs_stats1').innerHTML = "y convergence: " + runs_stats[1];
+    document.getElementById('runs_stats1').innerHTML = "";//"y convergence: " + runs_stats[1];
     document.getElementById('runs_stats2').innerHTML = "premature convergence: " + runs_stats[2];
     document.getElementById('runs_stats3').innerHTML = "exceeded # gens: " + runs_stats[3];
+    averages_fitness = Array.from({length: max_gens}, (e, i) => [0, 0]);
+    averages_value = Array.from({length: max_gens}, (e, i) => [0, 0]);
 }
