@@ -32,8 +32,8 @@ var sbx_n = 2;
 var blx_alpha = 0.5;
 
 var max_gens = 200;
-var epsilon_x = 0.1e-6;
-var epsilon_y = 0.1e-6;
+var epsilon_x = 0.1e-4;
+var epsilon_y = 0.1e-4;
 var amount_runs = 20;
 
 var current_generation;
