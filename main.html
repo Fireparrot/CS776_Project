@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html>
+<meta charset="utf-8">
+<head>
+    <title>Simulated Binary Crossover</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="logic.js"></script>
+    <script src="interaction.js"></script>
+
+    <style>
+        .graph-wrap {
+			width: 600px;
+			height: 400px;
+			background: #D3D3D3;
+		}
+        .graph-body {
+			max-height: 400px;
+			height: 400px;
+			font-size: .750em;
+		}
+        .double-graph {
+            width: 1200px;
+            max-height: 400px;
+        }
+        .left-element {
+            position: relative;
+            display: inline-block;
+            float: left;
+            left: 0;
+        }
+        .right-element {
+            position: relative;
+            display: inline-block;
+            float: right;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label for="func">Choose a function:</label>
+        <select name="func" id="func_selector"></select> 
+    </div>
+
+    <div class="double-graph">
+        <div class="graph-wrap left-element">
+            <div class="graph-body", id="func_graph"></div>
+        </div>
+        <div class="graph-wrap right-element">
+            <div class="graph-body", id="generation_graph"></div>
+        </div>
+    </div>
+    
+    <div>
+        <label for="init_mean">initial mean:</label>
+        <input type="text" id="init_mean">
+    </div>
+    <div>
+        <label for="init_radius">initial radius:</label>
+        <input type="text" id="init_radius">
+    </div>
+    <div>
+        <button id="generate_init">generate population</button>
+    </div>
+
+    <div>
+        <label for="pop_size">population size:</label>
+        <input type="text" id="pop_size" value="20">
+    </div>
+
+    <div>
+        <label for="cross_prob">crossover probability:</label>
+        <input type="text" id="cross_prob" value="1.0">
+    </div>
+
+    <div>
+        <label for="sbx_n">SBX n:</label>
+        <input type="text" id="sbx_n" value="2">
+    </div>
+
+    <div>
+        <button id="next_gen">next gen</button>
+        <button id="all_gens">run</button>
+        <button id="many_runs">run x</button>
+        <input type="text" id="amount_runs" value="20">
+    </div>
+
+    <div class="double-graph">
+        <div class="graph-wrap left-element">
+            <div class="graph-body", id="fitness_graph"></div>
+        </div>
+        <div class="graph-wrap right-element">
+            <div class="graph-body", id="value_graph"></div>
+        </div>
+    </div>
+    
+
+    <div>
+        <p id="generation_mean">mean:</p>
+        <p id="generation_best">best:</p>
+        <p id="target">target:</p>
+        <p id="generation_axis1">axis:</p>
+    </div>
+    <div>
+        <p id="runs_stats0">x convergence:</p>
+        <p id="runs_stats1">y convergence:</p>
+        <p id="runs_stats2">premature convergence:</p>
+        <p id="runs_stats3">exceeded # gens:</p>
+        <button id="clear_stats">clear stats</button>
+    </div>
+</body>
+</html>
