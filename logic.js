@@ -538,4 +538,8 @@ function do_many_runs() {
 
 function clear_stats() {
     runs_stats = [0,0,0,0];
+    document.getElementById('runs_stats0').innerHTML = "x convergence: " + runs_stats[0];
+    document.getElementById('runs_stats1').innerHTML = "y convergence: " + runs_stats[1];
+    document.getElementById('runs_stats2').innerHTML = "premature convergence: " + runs_stats[2];
+    document.getElementById('runs_stats3').innerHTML = "exceeded # gens: " + runs_stats[3];
 }
