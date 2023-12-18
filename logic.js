@@ -32,8 +32,8 @@ var sbx_n = 2;
 var blx_alpha = 0.5;
 
 var max_gens = 200;
-var epsilon_x = 0.1e-4;
-var epsilon_y = 0.1e-4;
+var epsilon_x = 1.e-4;
+var epsilon_y = 1.e-4;
 var amount_runs = 20;
 
 var current_generation;
@@ -142,7 +142,7 @@ var funcs =
     func_rastrigin, func_blocked];
 var funcs_xs_min =
     [[0.5], [0.5], [0.25], [0.2], [0.8, 0.8],
-    [0, 0, 0], [1, 1], [-5.12, -5.12, -5.12, -5.12, -5.12], Array.from({length: 30}, (x, i) => 0), [-32, -32],
+    [0, 0, 0], [1, 1], [-5.5, -5.5, -5.5, -5.5, -5.5], Array.from({length: 30}, (x, i) => 0), [-32, -32],
     Array.from({length: 20}, (x, i) => 0), [0.4, 0.45]];
 var funcs_y_min = [0, 0, -1, -1, func_pole([0.8, 0.8]),
     0, 0, 0, 0, 0,
@@ -151,6 +151,10 @@ var funcs_name =
     ["V function", "V-cliff function", "bimodal (equal)", "bimodal (unequal)", "pole function",
     "DeJong 1", "DeJong 2", "DeJong 3", "DeJong 4", "DeJong 5",
     "Rastrigin", "blocked function"];
+var funcs_epsilon_x =
+    [1.e-6, 1.e-6, 1.e-4, 1.e-4, 1.e-3,
+    1.e-2, 1.e-3, 0.5, 0.16, 0.1,
+    0.1, 1.e-4];
 
 var funcs_init_mean = funcs_xs_min;
 var funcs_init_radius = 
@@ -288,6 +292,8 @@ function func_selection() {
     func_pos = funcs_mean[func_id];
     func_axis1 = funcs_axis1[func_id];
     func_radius = funcs_radius[func_id];
+    epsilon_x = funcs_epsilon_x[func_id];
+    epsilon_y = funcs_epsilon_x[func_id]/1000;
     document.getElementById('init_mean').value = funcs_init_mean[func_id];
     document.getElementById('init_radius').value = funcs_init_radius[func_id];
     generate_func_graph();
